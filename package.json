@@ -1,0 +1,29 @@
+{
+  "name": "discover-engine",
+  "version": "0.0.1",
+  "description": "Discover Engine",
+  "main": "index.js",
+  "scripts": {
+    "lint": "jshint **.js",
+    "start": "npm run lint && node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/NorthImpact/discover-engine.git"
+  },
+  "author": "gpestana",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/NorthImpact/discover-engine/issues"
+  },
+  "homepage": "https://github.com/NorthImpact/discover-engine",
+  "devDependencies": {
+    "jshint": "^2.8.0"
+  },
+  "dependencies": {
+    "cron": "^1.0.9",
+    "express": "^4.13.3",
+    "gitumber": "0.0.1",
+    "mongoose": "^4.2.3"
+  }
+}
