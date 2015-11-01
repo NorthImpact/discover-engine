@@ -23,10 +23,6 @@ app.get('/data/:project', function(req, res){
 });
 
 
-
-
-
-
 function main() {
 	//starts server
 	var server = app.listen(3000, function(){
@@ -35,6 +31,8 @@ function main() {
 
 	//starts scrapper job
 	job.start();
+
+
 }
 
 
