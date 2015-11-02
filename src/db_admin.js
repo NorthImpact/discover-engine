@@ -1,30 +1,54 @@
-var mongoose = require('mongoose');
-var mongoose = require('./db.js').mongoose;
+var Project = require('./db.js').ProjectModel;
 
-var create_schema = function() {
-	console.log('creating schema');
-	var projectSchema = mongoose.Schema({
-		name: String,
-		proposed_pull_requests: [{date: Date, info: String}],
-		merged_pull_requests: [{date: Date, info: String}],
-		closed_issues: [{date: Date, info: String}],
-		new_issues: [{date: Date, info: String}],
+/*
+ * Admin
+ */
+var add_project = function() {
+	var name = '';
+	var org = '';
+	var desc = '';
+	var github = '';
+	var website = '';
+
+	var new_project = new Project({
+		name: name,
+		proposed_pull_requests: [],
+		merged_pull_requests: [],
+		closed_issues: [],
+		new_issues: [],
 		meta: {
-			organization: String,
-			description: String,
-			github: String,
-			website: String,
+			organization: name,
+			description: desc,
+			github: github,
+			website: website
 		}
 	});
 
-	//create schema
-	mongoose.model('Project', projectSchema);
+	new_project.save(function(err, res){
+		if (err) {
+			console.log(err)
+		} else {
+			console.log(res);
+		}
+	});
+}
+
+var remove_project = function(name){
+	Project.remove({name: name}, function(err, res){
+		if (err) {
+			console.log(err)
+		} else {
+			console.log(res);
+		}
+	});
+
+}
+
+var main = function() {
+	console.log('ADMIN');
+	//add_project();
+	//remove_project();
 }
 
 
-
-mongoose.connection.on('open', function(){
-  console.log('MONGO ADMIN: Connection open');
-  create_schema();
-});
-
+main();
