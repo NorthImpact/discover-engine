@@ -5,6 +5,23 @@ var db = mongoose.connect('mongodb://'+_db.ip+':'+_db.port+'/'+_db.name+'').conn
 /*
  * Mongoose Schema
  */
+db.on('open', function(){
+  console.log('MONGO: Connection OPEN');
+});
+
+db.once('close', function(){
+  console.log('MONGO: Connection CLOSED');
+});
+
+db.once('error', function(err){
+  console.log(err);
+});
+
+
+
+/*
+ * Mongoose Schema
+ */
 var projectSchema = mongoose.Schema({
 	name: {type: String, unique: true},
 	proposed_pull_requests: [{date: Date, info: String}],
@@ -22,17 +39,18 @@ var projectSchema = mongoose.Schema({
 var Project = mongoose.model('project', projectSchema);
 
 
-db.on('open', function(){
-  console.log('MONGO: Connection OPEN');
-});
+//in development
+projectSchema.methods.get_all = function(cb){
+	return this.model('project').find({}, cb);
+}
 
-db.once('close', function(){
-  console.log('MONGO: Connection CLOSED');
-});
+projectSchema.methods.get_project = function(project, cb) {
+	return this.model('project').find({'name': project}, cb);
+}
 
-db.once('error', function(err){
-  console.log(err);
-});
+projectSchema.methods.update_entry = function(project, data, cb) {
+	cb();
+};
 
 
 /*
@@ -54,11 +72,20 @@ var get_project = function(project, cb) {
 		if(err) {
 			console.log(err);
 		} else {
-			console.log(data);
 			cb(data);
 		}
 	});
 }
+
+/*
+ * helpers
+ */
+var list_repos = function(cb) {
+	var list = ['nodejs/node', 'northimpact/discover', 'northimpact/discover-engine'];
+	
+	cb(null, list);
+}
+
 
 /*
  * Update entry
@@ -126,5 +153,10 @@ process.on('SIGINT', function(){
 
 exports.get_all = get_all;
 exports.get_project = get_project;
+exports.list_repos = list_repos;
 exports.update_project = update_project;
 exports.ProjectModel = Project;
+
+
+//ugly?
+exports.events =  db;

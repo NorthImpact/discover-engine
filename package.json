@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "lint": "jshint **.js",
-    "start": "npm run lint && node index.js",
+    "start": "npm run lint && nodemon index.js",
     "db_admin": "node src/db_admin.js"
   },
   "repository": {
@@ -25,6 +25,7 @@
     "cron": "^1.0.9",
     "express": "^4.13.3",
     "gitumber": "0.0.1",
-    "mongoose": "^4.2.3"
+    "mongoose": "^4.2.3",
+    "underscore": "^1.8.3"
   }
 }
