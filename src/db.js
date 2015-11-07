@@ -84,17 +84,31 @@ var get_project = function(project, cb) {
  * helpers
  */
 var list_repos = function(cb) {
-	var list = ['medic/medic-webapp', 'northimpact/discover', 'northimpact/discover-engine'];
+	var list = ['medic/medic-webapp']//, 'northimpact/discover', 'northimpact/discover-engine'];
 	cb(null, list);
 }
 
 var _update_project = function(project_name, new_data) {
-	/*
-	_.each(new_data, function(data){
-		Project.update({$push: {new_issues: {date: new Date(), info: }}}, _update_cb);
+	var data_types = _.keys(new_data);
+
+	_.each(data_types, function(type) {
+		var entries_for_type = _.pairs(new_data[type]);
+		_.each(entries_for_type, function(entry){
+			if(type=='new-issues') {
+				Project.update({$push: 
+					{new_issues: {date: new Date(), info:entry}}}, _update_cb);
+			} else if (type=='proposed-pull-requests') {
+				Project.update({$push: 
+					{proposed_pull_requests: {date: new Date(), info:entry}}}, _update_cb);
+			} else if (type=='closed-issues') {
+				Project.update({$push: 
+					{closed_issues: {date: new Date(), info:entry}}}, _update_cb);
+			} else if (type=='closed_issues'){
+				Project.update({$push: {merged_pull_requests: 
+					{date: new Date(), info:entry}}}, _update_cb);
+			}
+		});
 	});
-	*/
-	console.log('WARNING: updated not implemented yet');
 };
 
 
@@ -104,7 +118,6 @@ var _update_cb = function(err){
 		console.log(err);
 	}
 }
-
 
 var update_project = function(repo, data, cb){
 	Project.find({'repo': repo}, function(err, res) {

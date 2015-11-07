@@ -1,10 +1,10 @@
 var db = require('./db.js');
-var cron = require('cron');
+var cron = require('cron').CronJob;
 var gitumber = require('gitumber');
 var _ = require('underscore');
 
-var start = function(){
-	console.log('JOB: scrapper job started');
+var job = function(){
+	console.log(new Date()+' JOB: scrapper job started');
 
 	var repo_list = {};
 	var new_data = {};
@@ -32,6 +32,14 @@ var start = function(){
 
 		});
 	});
+}
+
+
+var start = function() {
+	new cron('00 00 12 * 1 *', function() {
+		//this will run everyday at midnight LA time
+		job();
+	}, null, true, 'America/Los_Angeles'); //maybe check github's timezone???
 }
 
 exports.start = start;

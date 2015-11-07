@@ -4,12 +4,12 @@ var Project = require('./db.js').ProjectModel;
  * Admin
  */
 var add_project = function() {
-	var name = 'Discover';
-	var repo = 'northimpact/discover';
-	var org = 'North Impact';
-	var desc = 'Discover is a platform that connects open source innovation projects with potential contributors. ';
-	var github = 'https://github.com/northimpact/discover';
-	var website = 'http://discover.northimpact.com';
+	var name = 'Medic Mobile';
+	var repo = 'medic/medic-webapp';
+	var org = 'Medic Mobile';
+	var desc = 'The Medic Mobile web application combines SMS messaging, data collection, and analytics for health workers and health systems in hard-to-reach areas with or without internet connectivity';
+	var github = 'https://github.com/medic/medic-webapp';
+	var website = 'https://medicmobile.org';
 
 	var new_project = new Project({
 		name: name,
