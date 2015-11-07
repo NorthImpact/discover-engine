@@ -1,6 +1,7 @@
 var mongoose = require('mongoose');
 var _db = require('../private.js')._db;
 var db = mongoose.connect('mongodb://'+_db.ip+':'+_db.port+'/'+_db.name+'').connection;
+var _ = require('underscore');
 
 /*
  * Mongoose Schema
@@ -24,6 +25,7 @@ db.once('error', function(err){
  */
 var projectSchema = mongoose.Schema({
 	name: {type: String, unique: true},
+	repo: {type: String, unique: true},
 	proposed_pull_requests: [{date: Date, info: String}],
 	merged_pull_requests: [{date: Date, info: String}],
 	closed_issues: [{date: Date, info: String}],
@@ -77,69 +79,42 @@ var get_project = function(project, cb) {
 	});
 }
 
+
 /*
  * helpers
  */
 var list_repos = function(cb) {
-	var list = ['nodejs/node', 'northimpact/discover', 'northimpact/discover-engine'];
-	
+	var list = ['medic/medic-webapp', 'northimpact/discover', 'northimpact/discover-engine'];
 	cb(null, list);
 }
 
+var _update_project = function(project_name, new_data) {
+	/*
+	_.each(new_data, function(data){
+		Project.update({$push: {new_issues: {date: new Date(), info: }}}, _update_cb);
+	});
+	*/
+	console.log('WARNING: updated not implemented yet');
+};
 
-/*
- * Update entry
- */
- var update_project = function(project_name, new_data) {
 
- 	Project.find({name: project_name}, function(err, data) {
- 		if(err) {
- 			console.log('ERR: trying to update a project that does not exist');
- 		} else {
- 			if(new_data['proposed_pull_requests']) {
-				Project.update({name: project_name}, 
-					{$push:{'proposed_pull_requests': new_data['proposed_pull_requests']}}, 
-					function(err, data) {
-						if(err) {
-							console.log(err);
-						} else {
-							console.log("UPDATE: proposed_pull_requests added to "+project_name);
-						}
-					});
+var _update_cb = function(err){
+	if(err) {
+		console.log('ERROR: updating a project');
+		console.log(err);
+	}
+}
 
- 			} if (new_data['merged_pull_requests']) {
-				Project.update({name: project_name}, 
-					{$push:{'merged_pull_requests': new_data['merged_pull_requests']}}, 
-					function(err, data) {
-						if(err) {
-							console.log(err);
-						} else {
-							console.log("UPDATE: merged_pull_requests added to "+project_name);
-						}
-					});
 
- 			} if(new_data['closed_issues']) {
-				Project.update({name: project_name}, 
-					{$push:{'closed_issues': new_data['closed_issues']}}, function(err, data) {
-						if(err) {
-							console.log(err);
-						} else {
-							console.log("UPDATE: closed_issues added to "+project_name);
-						}
-					});
-				
- 			} if(new_data['new_issues']) {
-				Project.update({name: project_name}, 
-					{$push:{'new_issues': new_data['new_issues']}}, function(err, data) {
-						if(err) {
-							console.log(err);
-						} else {
-							console.log("UPDATE: new issue added to "+project_name);
-						}
-					});
- 			}
- 		}
- 	});
+var update_project = function(repo, data, cb){
+	Project.find({'repo': repo}, function(err, res) {
+		if(err) {
+			cb('ERROR: '+err);
+		} else {
+			_update_project(res[0]['name'], data)
+			cb(null);
+		}
+	});
 }
 
 
@@ -154,9 +129,6 @@ process.on('SIGINT', function(){
 exports.get_all = get_all;
 exports.get_project = get_project;
 exports.list_repos = list_repos;
-exports.update_project = update_project;
 exports.ProjectModel = Project;
-
-
-//ugly?
+exports.update_project = update_project;
 exports.events =  db;

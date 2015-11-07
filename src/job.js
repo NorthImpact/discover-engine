@@ -21,7 +21,13 @@ var start = function(){
 			} 
 
 			gitumber.get_data(opts, function(data, err){
-				db.update_project(repo, data);
+				db.update_project(repo, data, function(err){
+					if(err) {
+						console.log('UPDATE: something went wrong: '+err);
+					} else {
+						console.log('UPDATE: data from '+repo+' added');
+					}
+				});
 			});
 
 		});
